@@ -28,7 +28,9 @@ class G2atrain(nn.Module):
                 if i == j:
                     continue
                 temp.append(np.linalg.norm(hiddens_1[i] - hiddens_1[j]))
-            res.append(self.softmax1(temp))
+            temp = self.softmax1(temp)
+            ans = self.res(temp)
+            res.append(self.softmax1(ans))
         res = torch.FloatTensor(res)
         loss = self.loss_func(res, attention)
         self.optimizer.zero_grad()
@@ -38,3 +40,6 @@ class G2atrain(nn.Module):
     def softmax1(self,v: [int]):
         l1 = list(map(lambda x: np.exp(x), v))
         return list(map(lambda x: x / sum(l1), l1))
+    
+    def res(self,v: [int]):
+        return list(map(lambda x: 1/ x, v))
